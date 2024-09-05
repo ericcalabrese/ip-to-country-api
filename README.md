@@ -3,10 +3,10 @@
 This server provides the country name associated with an IP address by querying multiple IP location services.
 
 Key features include:
-- **Multiple Vendor Support**: The system can switch between multiple geolocation services (currently using `ipstack` and `ipapi`) to provide redundancy and fallback options.
+- **Multiple Vendor Support**: The system can switch between multiple geolocation services (currently using `ipstack` and `ipapi`) to provide fallback options.
 - **Rate Limiting**: Implemented per-vendor rate-limiting to prevent exceeding API request quotas.
 - **Caching**: A naive cache implementation reduces unnecessary API calls and improves performance.
-- **Error Handling**: Graceful error handling to ensure robust responses even when external services fail.
+- **Error Handling**: Graceful error handling to ensure responses even when external services fail.
 - **Scalable Design**: The design is modular, allowing new IP geolocation vendors to be added easily.
 
 ## Setup Instructions
@@ -56,4 +56,8 @@ Responses:
 This project uses Jest for unit and integration testing, along with Supertest to test the API endpoints.
 
 Running Tests
-- To run the full test suite: npm test
+- To run the full test suite:
+
+   ```bash
+      npm start
+    ```
