@@ -57,7 +57,7 @@ app.get('/ip-to-country', async (req, res) => {
 // Only call app.listen() if the file is run directly
 if (require.main === module) {
   app.listen(PORT, () => {
-    logger.info(`Server running on http://localhost:${PORT}`);
+    console.log(`Server running on port ${PORT}`);
   });
 }
 
