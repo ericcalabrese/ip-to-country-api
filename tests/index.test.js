@@ -1,6 +1,6 @@
 const request = require('supertest');
 const app = require('../src/index');
-const vendorClients = require('../src/vendorClients/vendorClient');
+const IpStackClient = require('../src/vendorClients/ipStackClient');
 
 describe('GET /ip-to-country', () => {
   // Store the server reference for cleanup
@@ -33,7 +33,8 @@ describe('GET /ip-to-country', () => {
   });
 
   it('should return a country from the fallback vendor if the primary vendor fails', async () => {
-    jest.spyOn(vendorClients, 'fetchCountry').mockImplementation(() => {
+    const ipStackClient = new IpStackClient();
+    jest.spyOn(ipStackClient, 'fetchCountry').mockImplementation(() => {
       throw new Error('Primary vendor failed');
     });
   

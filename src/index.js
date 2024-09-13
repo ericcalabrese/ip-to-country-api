@@ -1,10 +1,9 @@
 const express = require('express');
 const { getCachedCountry, cacheCountry } = require('./cache');
-const { getCountryFromIpStack } = require('./vendorClients/ipStackClient');
-const { getCountryFromIpapi } = require('./vendorClients/ipapiClient');
+const VendorFactory = require('./vendorClients/vendorFactory');
 
 const app = express();
-const { PORT } = require('./config');
+const { PORT, vendors } = require('./config');
 
 // Utility function for IP validation
 function isValidIP(ip) {
@@ -19,19 +18,20 @@ async function getCountry(ip) {
     return cachedCountry;
   }
 
-  try {
-    const country = await getCountryFromIpStack(ip);
-    cacheCountry(ip, country);
-    return country;
-  } catch (error) {
+  for (const vendor of vendors) {
     try {
-      const country = await getCountryFromIpapi(ip);
-      cacheCountry(ip, country);
-      return country;
-    } catch (error) {
-      throw new Error('Failed to fetch country from all vendors.');
+      const factory = VendorFactory.getVendor(vendor.name);
+      const country = await factory.fetchCountry(ip);
+      if (country) {
+        cacheCountry(ip, country);
+        return country;
+      }
+    } catch(error) {
+      console.error(`Failed to fetch country from ${vendor.name}: `, error.message);
     }
   }
+
+  throw new Error('Failed to fetch country from all vendors.');
 }
 
 app.get('/ip-to-country', async (req, res) => {
